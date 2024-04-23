@@ -1,4 +1,7 @@
-﻿namespace CheckersGame
+﻿using System.Collections.Generic;
+using System;
+
+namespace CheckersGame
 {
     internal class Move
     {

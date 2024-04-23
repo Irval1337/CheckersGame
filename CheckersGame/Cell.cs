@@ -1,4 +1,6 @@
-﻿namespace CheckersGame
+﻿using System;
+
+namespace CheckersGame
 {
     internal class Cell : ICloneable
     {
@@ -7,7 +9,8 @@
         public int column { get; set; }
         public bool isKing { get; set; }
 
-        public Cell(int row_, int column_, int player_) { 
+        public Cell(int row_, int column_, int player_)
+        {
             row = row_; column = column_; playerId = player_;
             isKing = false;
         }
@@ -15,3 +18,4 @@
         public object Clone() => MemberwiseClone();
     }
 }
+

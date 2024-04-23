@@ -38,7 +38,7 @@ namespace CheckersGame
                 }
             }
 
-            for(int i = (_rows - 2) / 2; i < (_rows - 2) / 2 + 2; i++)
+            for (int i = (_rows - 2) / 2; i < (_rows - 2) / 2 + 2; i++)
             {
                 _board.Add(new List<Cell>());
                 for (int j = 0; j < _columns; j++)
@@ -58,6 +58,11 @@ namespace CheckersGame
                     was = !was;
                 }
             }
+        }
+
+        public int getPlayer()
+        {
+            return _current_player;
         }
 
         private void remove(int row, int column)
@@ -104,12 +109,14 @@ namespace CheckersGame
             return 0;
         }
 
-        private void validateMove(Move move)
+        public void validateMove(Move move)
         {
             if (_board[move.from.Item1][move.from.Item2].playerId != _current_player)
                 throw new Exception("Выбранная фигура вам не принадлежит.");
             if (_board[move.to.Item1][move.to.Item2].playerId != 0)
                 throw new Exception("Выбранная клетка не является пустой.");
+            if (move.from == move.to)
+                throw new Exception("Игрок обязан сделать ход.");
 
             int row_delta = Math.Abs(move.from.Item1 - move.to.Item1), column_delta = Math.Abs(move.from.Item2 - move.to.Item2);
             if (row_delta != column_delta)
@@ -150,7 +157,7 @@ namespace CheckersGame
             _board[move.from.Item1][move.from.Item2].playerId = 0;
             _board[move.from.Item1][move.from.Item2].isKing = false;
 
-            if (!figure.isKing && (_current_player == 1 && move.to.Item1 == 0 || _current_player == 2 && move.to.Item2 == _rows - 1))
+            if (!figure.isKing && (_current_player == 1 && move.to.Item1 == 0 || _current_player == 2 && move.to.Item1 == _rows - 1))
             {
                 figure.isKing = true;
                 if (_current_player == 1)
@@ -182,9 +189,9 @@ namespace CheckersGame
             MoveList list = new MoveList();
             bool canCapture = false;
 
-            for(int fromRow = 0; fromRow < _rows; fromRow++)
+            for (int fromRow = 0; fromRow < _rows; fromRow++)
             {
-                for(int fromCol = 0; fromCol < _columns; fromCol++)
+                for (int fromCol = 0; fromCol < _columns; fromCol++)
                 {
                     if (_board[fromRow][fromCol].playerId == 0) continue;
                     bool isKing = _board[fromRow][fromCol].isKing;
@@ -204,7 +211,7 @@ namespace CheckersGame
 
                         if (fromRow != _rows - 2)
                         {
-                            if (fromCol != 0 && _board[fromRow + 1][fromCol - 1].playerId == getOppenent(_current_player) && fromCol >= 2 && 
+                            if (fromCol != 0 && _board[fromRow + 1][fromCol - 1].playerId == getOppenent(_current_player) && fromCol >= 2 &&
                                 _board[fromRow + 2][fromCol - 2].playerId == 0)
                             {
                                 if (!canCapture)
