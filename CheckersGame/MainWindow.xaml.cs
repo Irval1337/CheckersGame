@@ -1,28 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CheckersGame
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private Game game = new Game(8, 8);
         private (int, int) moveFigure = (-1, -1);
-        private Move last_move = new Move((-1, -1), (-1, -1));
+        private List<(int, int)> lastMoves = new List<(int, int)>();
+        private int prevPlayer = 2;
 
         public MainWindow()
         {
@@ -49,7 +38,8 @@ namespace CheckersGame
                             try
                             {
                                 game.move(new Move(moveFigure, pos));
-                                last_move = new Move(moveFigure, pos);
+                                lastMoves.Add(pos);
+                                lastMoves.Add(moveFigure);
                                 (se as BoardCell).Activate(true);
                                 (Board.Children[8 * moveFigure.Item1 + moveFigure.Item2] as BoardCell).Activate(true);
                                 changePlayer();
@@ -105,7 +95,7 @@ namespace CheckersGame
 
                     (Board.Children[8 * i + j] as BoardCell).CellType = type;
                     (Board.Children[8 * i + j] as BoardCell).SetMove(false);
-                    if (last_move.to != (i, j) && last_move.from != (i, j))
+                    if (!lastMoves.Contains((i, j)))
                         (Board.Children[8 * i + j] as BoardCell).Activate(false);
                     (Board.Children[8 * i + j] as BoardCell).Cursor = game.getPlayer() == board[i][j].playerId ? Cursors.Hand : Cursors.Arrow;
                 }
@@ -116,7 +106,11 @@ namespace CheckersGame
         {
             moveFigure = (-1, -1);
             updateBoard();
-            
+            if (prevPlayer != game.getPlayer())
+            {
+                lastMoves.Clear();
+                prevPlayer = game.getPlayer();
+            }
         }
     }
 }

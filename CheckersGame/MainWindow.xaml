@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CheckersGame"
         mc:Ignorable="d"
-        Title="CheckersGame" Height="650" Width="1280" Loaded="Window_Loaded">
+        Title="CheckersGame" Height="700" Width="1280" Loaded="Window_Loaded">
     <Grid Background="#fafdf7">
         <Border CornerRadius="7" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#e5e7eb" Margin="0 0" Background="White">
             <Border.Effect>
                 <DropShadowEffect RenderingBias="Performance" ShadowDepth="3" Direction="270" BlurRadius="6" Opacity="0.15" Color="#FF7B8387" />
             </Border.Effect>
-            <Grid Background="Transparent" Height="590" Width="570">
+            <Grid Background="Transparent" Height="630" Width="570">
                 <Grid Height="496" Width="496" x:Name="Board">
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
