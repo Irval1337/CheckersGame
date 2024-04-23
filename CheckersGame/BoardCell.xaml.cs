@@ -75,11 +75,15 @@ namespace CheckersGame
             {
                 this.Cursor = Cursors.Hand;
                 figure.Visibility = Visibility.Visible;
+                if (btn.BorderThickness.Left == 4)
+                    figure.Margin = new Thickness(0, 0, 0, 0);
             }
             else
             {
                 this.Cursor = Cursors.Arrow;
                 figure.Visibility = Visibility.Collapsed;
+                if (btn.BorderThickness.Left == 4)
+                    figure.Margin = new Thickness(-4, -4, 0, 0);
             }
         }
 
@@ -87,7 +91,9 @@ namespace CheckersGame
         {
             btn.BorderThickness = new Thickness(val ? 4 : 0);
             if (val)
+            {
                 figure.Margin = new Thickness(-4, -4, 0, 0);
+            }
             else
                 figure.Margin = new Thickness(0);
         }
