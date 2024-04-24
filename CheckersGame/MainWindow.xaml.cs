@@ -114,7 +114,18 @@ namespace CheckersGame
 
             if (game.getPlayer() == 2)
             {
-                game.move(new UCTBot((Game)game.Clone(), 3000).suggest());
+                var t = new UCTBot((Game)game.Clone(), 3000).suggest();
+                string s = "";
+                for(int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        s += game.getBoard()[i][j].playerId.ToString();
+                    }
+                    s += "\n";
+                }
+                //MessageBox.Show(s);
+                game.move(t);
                 changePlayer();
             }
         }

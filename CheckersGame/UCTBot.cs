@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CheckersGame
 {
-    internal class UCTNode
+    internal class UCTNode : ICloneable
     {
         public int Visits { get; set; }
         public int Score { get; set; }
@@ -20,7 +21,7 @@ namespace CheckersGame
             Score = 0;
             Children = new List<UCTNode>();
             PlayerId = player;
-            Move = move;
+            Move = (Move)move.Clone();
         }
 
         public int getOpponent()
@@ -35,11 +36,11 @@ namespace CheckersGame
 
         public void expand(Game game)
         {
-            MoveList moves = game.getMoveList();
+            List<Move> moves = game.getMoveList();
 
-            for (var i = 0; i < moves.moves.Count; i++)
+            for (var i = 0; i < moves.Count; i++)
             {
-                var child = new UCTNode(moves.moves[i], game.getPlayer());
+                var child = new UCTNode(moves[i], game.getPlayer());
                 Children.Add(child);
             }
         }
@@ -64,20 +65,35 @@ namespace CheckersGame
             }
             return bestChild;
         }
+
+        public object Clone()
+        {
+            UCTNode node = new UCTNode(Move, PlayerId);
+            node.Visits = Visits;
+            node.Score = Score;
+            node.Children = new List<UCTNode>();
+            for(int i = 0; i < Children.Count; i++)
+            {
+                node.Children.Add((UCTNode)Children[i].Clone());
+            }
+            return node;
+        }
     }
 
     internal class UCTBot
     {
         public UCTBot(Game game, int maxTime)
         {
-            _root = new UCTNode(null, 0);
+            _root = new UCTNode(new Move((-1, -1), (-1, -1)), 0);
             _original = (Game)game.Clone();
             _maturityThreshold = 200;
             _maxTime = maxTime;
 
             _root.expand(game);
-            _history = new List<UCTNode>();
-            _history.Add(_root);
+            _history = new List<UCTNode>
+            {
+                _root
+            };
         }
 
         private int playout(Game game)
@@ -87,8 +103,8 @@ namespace CheckersGame
             {
                 try
                 {
-                    MoveList moveList = game.getMoveList();
-                    int result = game.move(moveList.moves[new Random((int)DateTime.Now.Ticks).Next() % moveList.moves.Count]);
+                    List<Move> moveList = game.getMoveList();
+                    int result = game.move(moveList[new Random((int)DateTime.Now.Ticks).Next() % moveList.Count]);
                     if (result != 0)
                         return result;
                 }
@@ -104,9 +120,9 @@ namespace CheckersGame
 
         private void run()
         {
-            int depth = 1;
+            int depth = 0;
             Game board = (Game)_original.Clone();
-            var node = _root;
+            var node = (UCTNode)_root.Clone();
             int winner = 0;
 
             while (true)
@@ -161,7 +177,7 @@ namespace CheckersGame
             while (true)
             {
                 int i = 0;
-                for (; i < 500; i++)
+                for (; i < 1; i++)
                 {
                     run();
                     elapsed = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - start;
@@ -174,7 +190,7 @@ namespace CheckersGame
             }
 
             UCTNode bestChild = null;
-            int bestScore = (int)-1e9;
+            double bestScore = -1e9;
             for (var i = 0; i < _root.Children.Count; i++)
             {
                 var child = _root.Children[i];

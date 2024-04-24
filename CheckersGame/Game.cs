@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckersGame
 {
@@ -104,7 +101,7 @@ namespace CheckersGame
             if (makeMove(move))
                 return _current_player;
             var moves = getMoveList();
-            if (moves.moves.Count == 0)
+            if (moves.Count == 0)
                 return getOppenent(_current_player);
             return 0;
         }
@@ -184,9 +181,9 @@ namespace CheckersGame
             return false;
         }
 
-        public MoveList getMoveList()
+        public List<Move> getMoveList()
         {
-            MoveList list = new MoveList();
+            List<Move> list = new List<Move>();
             bool canCapture = false;
 
             for (int fromRow = 0; fromRow < _rows; fromRow++)
@@ -201,12 +198,12 @@ namespace CheckersGame
                         if (fromCol != 0)
                         {
                             if (_board[fromRow + 1][fromCol - 1].playerId == 0 && !canCapture)
-                                list.add(new Move((fromRow, fromCol), (fromRow + 1, fromCol - 1)));
+                                list.Add(new Move((fromRow, fromCol), (fromRow + 1, fromCol - 1)));
                         }
                         if (fromCol != _columns - 1)
                         {
                             if (_board[fromRow + 1][fromCol + 1].playerId == 0 && !canCapture)
-                                list.add(new Move((fromRow, fromCol), (fromRow + 1, fromCol + 1)));
+                                list.Add(new Move((fromRow, fromCol), (fromRow + 1, fromCol + 1)));
                         }
 
                         if (fromRow != _rows - 2)
@@ -216,20 +213,20 @@ namespace CheckersGame
                             {
                                 if (!canCapture)
                                 {
-                                    list.clear();
+                                    list.Clear();
                                     canCapture = true;
                                 }
-                                list.add(new Move((fromRow, fromCol), (fromRow + 2, fromCol - 2)));
+                                list.Add(new Move((fromRow, fromCol), (fromRow + 2, fromCol - 2)));
                             }
                             if (fromCol != _columns - 1 && _board[fromRow + 1][fromCol + 1].playerId == getOppenent(_current_player) && fromCol < _columns - 2 &&
                                  _board[fromRow + 2][fromCol + 2].playerId == 0)
                             {
                                 if (!canCapture)
                                 {
-                                    list.clear();
+                                    list.Clear();
                                     canCapture = true;
                                 }
-                                list.add(new Move((fromRow, fromCol), (fromRow + 2, fromCol + 2)));
+                                list.Add(new Move((fromRow, fromCol), (fromRow + 2, fromCol + 2)));
                             }
                         }
                     }
@@ -239,12 +236,12 @@ namespace CheckersGame
                         if (fromCol != 0)
                         {
                             if (_board[fromRow - 1][fromCol - 1].playerId == 0 && !canCapture)
-                                list.add(new Move((fromRow, fromCol), (fromRow - 1, fromCol - 1)));
+                                list.Add(new Move((fromRow, fromCol), (fromRow - 1, fromCol - 1)));
                         }
                         if (fromCol != _columns - 1)
                         {
                             if (_board[fromRow - 1][fromCol + 1].playerId == 0 && !canCapture)
-                                list.add(new Move((fromRow, fromCol), (fromRow - 1, fromCol + 1)));
+                                list.Add(new Move((fromRow, fromCol), (fromRow - 1, fromCol + 1)));
                         }
 
                         if (fromRow >= 2)
@@ -254,20 +251,20 @@ namespace CheckersGame
                             {
                                 if (!canCapture)
                                 {
-                                    list.clear();
+                                    list.Clear();
                                     canCapture = true;
                                 }
-                                list.add(new Move((fromRow, fromCol), (fromRow - 2, fromCol - 2)));
+                                list.Add(new Move((fromRow, fromCol), (fromRow - 2, fromCol - 2)));
                             }
                             if (fromCol != _columns - 1 && _board[fromRow - 1][fromCol + 1].playerId == getOppenent(_current_player) && fromCol < _columns - 2 &&
                                  _board[fromRow - 2][fromCol + 2].playerId == 0)
                             {
                                 if (!canCapture)
                                 {
-                                    list.clear();
+                                    list.Clear();
                                     canCapture = true;
                                 }
-                                list.add(new Move((fromRow, fromCol), (fromRow - 2, fromCol + 2)));
+                                list.Add(new Move((fromRow, fromCol), (fromRow - 2, fromCol + 2)));
                             }
                         }
                     }
@@ -277,7 +274,25 @@ namespace CheckersGame
             return list;
         }
 
-        public object Clone() => MemberwiseClone();
+        public object Clone()
+        {
+            Game game = new Game(_rows, _columns);
+            game._board = new List<List<Cell>>();
+            for(int i = 0; i < _rows; i++)
+            {
+                List<Cell> list = new List<Cell>();
+                for(int j =  0; j < _columns; j++)
+                {
+                    list.Add((Cell)_board[i][j].Clone());
+                }
+                game._board.Add(list);
+            }
+            game._figureCount = (_figureCount.Item1, _figureCount.Item2);
+            game._kingCount = (_kingCount.Item1, _kingCount.Item2);
+            game._is_multiTurn = _is_multiTurn;
+            game._current_player = _current_player;
+            return game;
+        }
 
         private int getOppenent(int player)
         {
@@ -308,7 +323,7 @@ namespace CheckersGame
         }
 
         private int _rows, _columns;
-        private ValueTuple<int, int> _figureCount, _kingCount;
+        private (int, int) _figureCount, _kingCount;
         private List<List<Cell>> _board;
         private bool _is_multiTurn = false;
         private int _current_player = 1;

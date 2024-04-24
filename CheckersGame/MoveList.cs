@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 
 namespace CheckersGame
 {
-    internal class Move
+    internal class Move : ICloneable
     {
         public ValueTuple<int, int> from { get; set; }
         public ValueTuple<int, int> to { get; set; }
@@ -13,25 +12,11 @@ namespace CheckersGame
             this.from = from;
             this.to = to;
         }
-    }
 
-    internal class MoveList
-    {
-        public List<Move> moves { get; set; }
-
-        public MoveList()
+        public object Clone()
         {
-            moves = new List<Move>();
-        }
-
-        public void add(Move move)
-        {
-            moves.Add(move);
-        }
-
-        public void clear()
-        {
-            moves.Clear();
+            Move move = new Move((from.Item1, from.Item2), (to.Item1, to.Item2));
+            return move;
         }
     }
 }
