@@ -32,7 +32,7 @@ namespace CheckersGame
                     cell.PreviewMouseDown += (se, ev) =>
                     {
                         (int, int) pos = ((int, int))(se as BoardCell).Tag;
-                        if (game.getBoard()[pos.Item1][pos.Item2].playerId != game.getPlayer())
+                        if (game.getBoard()[pos.Item1][pos.Item2].playerId != game.getPlayer() || game.getPlayer() == 2)
                         {
                             if (game.getBoard()[pos.Item1][pos.Item2].playerId != 0 || moveFigure == (-1, -1)) return;
                             try
@@ -97,7 +97,7 @@ namespace CheckersGame
                     (Board.Children[8 * i + j] as BoardCell).SetMove(false);
                     if (!lastMoves.Contains((i, j)))
                         (Board.Children[8 * i + j] as BoardCell).Activate(false);
-                    (Board.Children[8 * i + j] as BoardCell).Cursor = game.getPlayer() == board[i][j].playerId ? Cursors.Hand : Cursors.Arrow;
+                    (Board.Children[8 * i + j] as BoardCell).Cursor = game.getPlayer() == board[i][j].playerId && game.getPlayer() != 2 ? Cursors.Hand : Cursors.Arrow;
                 }
             }
         }
@@ -110,6 +110,12 @@ namespace CheckersGame
             {
                 lastMoves.Clear();
                 prevPlayer = game.getPlayer();
+            }
+
+            if (game.getPlayer() == 2)
+            {
+                game.move(new UCTBot((Game)game.Clone(), 3000).suggest());
+                changePlayer();
             }
         }
     }

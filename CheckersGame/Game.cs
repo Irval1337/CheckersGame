@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckersGame
 {
-    internal class Game
+    internal class Game : ICloneable
     {
         public Game(int rows, int columns)
         {
@@ -184,7 +184,7 @@ namespace CheckersGame
             return false;
         }
 
-        private MoveList getMoveList()
+        public MoveList getMoveList()
         {
             MoveList list = new MoveList();
             bool canCapture = false;
@@ -276,6 +276,8 @@ namespace CheckersGame
 
             return list;
         }
+
+        public object Clone() => MemberwiseClone();
 
         private int getOppenent(int player)
         {
