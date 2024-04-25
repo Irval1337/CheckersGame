@@ -156,7 +156,7 @@ namespace CheckersGame
             }
         }
 
-        public Move suggest()
+        public (Move, long) suggest()
         {
             long TotalPlayouts = 0, start = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             long elapsed = 0;
@@ -188,7 +188,7 @@ namespace CheckersGame
                 }
             }
 
-            return bestChild.Move;
+            return (bestChild.Move, TotalPlayouts);
         }
 
         private UCTNode _root;

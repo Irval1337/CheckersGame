@@ -119,7 +119,9 @@ namespace CheckersGame
 
                 if (game.getPlayer() == 2)
                 {
-                    var move = new UCTBot((Game)game.Clone(), 15000).suggest();
+                    var result = new UCTBot((Game)game.Clone(), 6000).suggest();
+                    var move = result.Item1;
+                    MessageBox.Show(result.Item2.ToString());
                     game.move(move);
                     lastMoves.Add(move.from);
                     lastMoves.Add(move.to);
