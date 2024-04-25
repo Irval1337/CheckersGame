@@ -31,7 +31,7 @@ namespace CheckersGame
 
         public int playFor(Game game)
         {
-            return (game.Clone() as Game).move(Move);
+            return game.move(Move);
         }
 
         public void expand(Game game)
@@ -84,16 +84,14 @@ namespace CheckersGame
     {
         public UCTBot(Game game, int maxTime)
         {
-            _root = new UCTNode(new Move((-1, -1), (-1, -1)), 0);
-            _original = (Game)game.Clone();
+            _root = new UCTNode(new Move((-1, -1), (-1, -1)), 2);
+            _original = game;
             _maturityThreshold = 200;
             _maxTime = maxTime;
 
             _root.expand(game);
-            _history = new List<UCTNode>
-            {
-                _root
-            };
+            _history = new Dictionary<int, UCTNode>();
+            _history[0] = _root;
         }
 
         private int playout(Game game)
@@ -101,14 +99,9 @@ namespace CheckersGame
             int nmoves = 0;
             while (++nmoves < 60)
             {
-                try
-                {
-                    List<Move> moveList = game.getMoveList();
-                    int result = game.move(moveList[new Random((int)DateTime.Now.Ticks).Next() % moveList.Count]);
-                    if (result != 0)
-                        return result;
-                }
-                catch (Exception) { }
+                int result = game.moveRandom();
+                if (result != 0)
+                    return result;
             }
             int p1 = game.getScore(true), p2 = game.getScore(false);
             if (p1 > p2)
@@ -120,9 +113,9 @@ namespace CheckersGame
 
         private void run()
         {
-            int depth = 0;
+            int depth = 1;
             Game board = (Game)_original.Clone();
-            var node = (UCTNode)_root.Clone();
+            var node = _root;
             int winner = 0;
 
             while (true)
@@ -135,22 +128,16 @@ namespace CheckersGame
                         if (node.Children.Count == 0)
                         {
                             winner = node.getOpponent();
-                            if (_history.Count <= depth)
-                                _history.Add(node);
-                            else
-                                _history[depth++] = node;
+                            _history[depth++] = node;
                             break;
                         }
                         continue;
                     }
-                    winner = playout((Game)board.Clone());
+                    winner = playout(board);
                     break;
                 }
                 node = node.findBestChild();
-                if (_history.Count <= depth)
-                    _history.Add(node);
-                else
-                    _history[depth++] = node;
+                _history[depth++] = node;
                 if (node.playFor(board) != 0)
                 {
                     winner = board.getPlayer();
@@ -177,7 +164,7 @@ namespace CheckersGame
             while (true)
             {
                 int i = 0;
-                for (; i < 1; i++)
+                for (; i < 500; i++)
                 {
                     run();
                     elapsed = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - start;
@@ -206,7 +193,7 @@ namespace CheckersGame
 
         private UCTNode _root;
         private int _maturityThreshold, _maxTime;
-        private List<UCTNode> _history;
+        private Dictionary<int, UCTNode> _history;
         private Game _original;
     }
 }

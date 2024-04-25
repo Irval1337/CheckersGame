@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CheckersGame
 {
@@ -90,44 +93,43 @@ namespace CheckersGame
                     if (board[i][j].playerId == 2) type = 0b00;
                     else if (board[i][j].playerId == 1) type = 0b10;
                     else type = -1;
-
                     if (board[i][j].isKing) type |= 0b01;
 
-                    (Board.Children[8 * i + j] as BoardCell).CellType = type;
-                    (Board.Children[8 * i + j] as BoardCell).SetMove(false);
-                    if (!lastMoves.Contains((i, j)))
-                        (Board.Children[8 * i + j] as BoardCell).Activate(false);
-                    (Board.Children[8 * i + j] as BoardCell).Cursor = game.getPlayer() == board[i][j].playerId && game.getPlayer() != 2 ? Cursors.Hand : Cursors.Arrow;
+                    Dispatcher.Invoke(() => {
+                        (Board.Children[8 * i + j] as BoardCell).CellType = type;
+                        (Board.Children[8 * i + j] as BoardCell).SetMove(false);
+                        if (!lastMoves.Contains((i, j)))
+                            (Board.Children[8 * i + j] as BoardCell).Activate(false);
+                        (Board.Children[8 * i + j] as BoardCell).Cursor = game.getPlayer() == board[i][j].playerId && game.getPlayer() != 2 ? Cursors.Hand : Cursors.Arrow;
+                    });
                 }
             }
         }
 
         private void changePlayer()
         {
-            moveFigure = (-1, -1);
-            updateBoard();
-            if (prevPlayer != game.getPlayer())
-            {
-                lastMoves.Clear();
-                prevPlayer = game.getPlayer();
-            }
-
-            if (game.getPlayer() == 2)
-            {
-                var t = new UCTBot((Game)game.Clone(), 3000).suggest();
-                string s = "";
-                for(int i = 0; i < 8; i++)
+            new Thread(() => {
+                moveFigure = (-1, -1);
+                updateBoard();
+                if (prevPlayer != game.getPlayer())
                 {
-                    for (int j = 0; j < 8; j++)
-                    {
-                        s += game.getBoard()[i][j].playerId.ToString();
-                    }
-                    s += "\n";
+                    lastMoves.Clear();
+                    prevPlayer = game.getPlayer();
                 }
-                //MessageBox.Show(s);
-                game.move(t);
-                changePlayer();
-            }
+
+                if (game.getPlayer() == 2)
+                {
+                    var move = new UCTBot((Game)game.Clone(), 15000).suggest();
+                    game.move(move);
+                    lastMoves.Add(move.from);
+                    lastMoves.Add(move.to);
+                    Dispatcher.Invoke(() => {
+                        (Board.Children[move.from.Item1 * 8 + move.from.Item2] as BoardCell).Activate(true);
+                        (Board.Children[move.to.Item1 * 8 + move.to.Item2] as BoardCell).Activate(true);
+                    });
+                    changePlayer();
+                }
+            }).Start();
         }
     }
 }

@@ -22,6 +22,7 @@ namespace CheckersGame
             _figureCount.Item1 = _figureCount.Item2 = (_rows - 2) / 2 * (_columns / 2);
             _kingCount.Item1 = _kingCount.Item2 = 0;
             _board = new List<List<Cell>>();
+            _random = new Random();
 
             for (int i = 0; i < (_rows - 2) / 2; i++)
             {
@@ -97,12 +98,29 @@ namespace CheckersGame
 
         public int move(Move move)
         {
-            validateMove(move);
-            if (makeMove(move))
-                return _current_player;
-            var moves = getMoveList();
+            try
+            {
+                validateMove(move);
+                if (makeMove(move))
+                    return _current_player;
+                var moves = getMoveList();
+                if (moves.Count == 0)
+                    return getOppenent(_current_player);
+                return 0;
+            } catch (Exception e)
+            {
+                return 0;
+            }
+        }
+
+        public int moveRandom()
+        {
+            List<Move> moves = getMoveList();
             if (moves.Count == 0)
                 return getOppenent(_current_player);
+            int ind = _random.Next() % moves.Count;
+            if (move((Move)moves[ind].Clone()) != 0)
+                return _current_player;
             return 0;
         }
 
@@ -190,7 +208,7 @@ namespace CheckersGame
             {
                 for (int fromCol = 0; fromCol < _columns; fromCol++)
                 {
-                    if (_board[fromRow][fromCol].playerId == 0) continue;
+                    if (_board[fromRow][fromCol].playerId != _current_player) continue;
                     bool isKing = _board[fromRow][fromCol].isKing;
 
                     if ((isKing || _current_player == 2) && fromRow != _rows - 1)
@@ -291,6 +309,7 @@ namespace CheckersGame
             game._kingCount = (_kingCount.Item1, _kingCount.Item2);
             game._is_multiTurn = _is_multiTurn;
             game._current_player = _current_player;
+            game._random = _random;
             return game;
         }
 
@@ -327,5 +346,6 @@ namespace CheckersGame
         private List<List<Cell>> _board;
         private bool _is_multiTurn = false;
         private int _current_player = 1;
+        private Random _random;
     }
 }
