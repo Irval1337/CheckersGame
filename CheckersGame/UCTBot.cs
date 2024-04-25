@@ -149,7 +149,7 @@ namespace CheckersGame
             {
                 node = _history[i];
                 node.Visits++;
-                if (winner == node.PlayerId)
+                if (winner != node.PlayerId)
                     node.Score += 1;
                 else if (winner != 0)
                     node.Score -= 1;
