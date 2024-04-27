@@ -98,19 +98,13 @@ namespace CheckersGame
 
         public int move(Move move)
         {
-            try
-            {
-                validateMove(move);
-                if (makeMove(move))
-                    return _current_player;
-                var moves = getMoveList();
-                if (moves.Count == 0)
-                    return getOppenent(_current_player);
-                return 0;
-            } catch (Exception e)
-            {
-                return 0;
-            }
+            validateMove(move);
+            if (makeMove(move))
+                return _current_player;
+            var moves = getMoveList();
+            if (moves.Count == 0)
+                return getOppenent(_current_player);
+            return 0;
         }
 
         public int moveRandom()

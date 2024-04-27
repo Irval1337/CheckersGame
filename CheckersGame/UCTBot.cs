@@ -82,12 +82,29 @@ namespace CheckersGame
 
     internal class UCTBot
     {
-        public UCTBot(Game game, int maxTime)
+        public UCTBot(Game game, int level)
         {
             _root = new UCTNode(new Move((-1, -1), (-1, -1)), 2);
             _original = game;
             _maturityThreshold = 200;
-            _maxTime = maxTime;
+            switch (level)
+            {
+                case 1:
+                    _maxTime = 1;
+                    break;
+                case 2:
+                    _maxTime = 100;
+                    break;
+                case 3:
+                    _maxTime = 500;
+                    break;
+                case 4:
+                    _maxTime = 1000;
+                    break;
+                case 5:
+                    _maxTime = 6000;
+                    break;
+            }
 
             _root.expand(game);
             _history = new Dictionary<int, UCTNode>();
@@ -158,6 +175,14 @@ namespace CheckersGame
 
         public (Move, long) suggest()
         {
+            if (_maxTime == 1)
+            {
+                var moves = _original.getMoveList();
+                if (moves.Count != 0) {
+                    int ind = (int)(DateTime.UtcNow.Ticks % moves.Count);
+                    return (moves[ind], 1);
+                }
+            }
             long TotalPlayouts = 0, start = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             long elapsed = 0;
 

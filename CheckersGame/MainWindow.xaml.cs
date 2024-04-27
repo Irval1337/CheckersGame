@@ -127,16 +127,30 @@ namespace CheckersGame
 
                 if (game.getPlayer() == 2)
                 {
-                    var result = new UCTBot((Game)game.Clone(), 6000).suggest();
-                    var move = result.Item1;
-                    //MessageBox.Show(result.Item2.ToString());
-                    int game_result = game.move(move);
-                    lastMoves.Add(move.from);
-                    lastMoves.Add(move.to);
-                    Dispatcher.Invoke(() => {
-                        (Board.Children[move.from.Item1 * 8 + move.from.Item2] as BoardCell).Activate(true);
-                        (Board.Children[move.to.Item1 * 8 + move.to.Item2] as BoardCell).Activate(true);
-                    });
+                    int game_result;
+                    if (game.getMoveList().Count == 0)
+                        game_result = 1;
+                    else
+                    {
+                        int level = 0;
+                        Dispatcher.Invoke(() => {
+                            level = (int)DifficultySlider.Value;
+                        });
+                        var result = new UCTBot((Game)game.Clone(), level).suggest();
+                        if (level < 3)
+                            Thread.Sleep(500);
+                        var move = result.Item1;
+                        //MessageBox.Show(result.Item2.ToString());
+                        game_result = game.move(move);
+                        if (game.getMoveList().Count == 0)
+                            game_result = 2;
+                        lastMoves.Add(move.from);
+                        lastMoves.Add(move.to);
+                        Dispatcher.Invoke(() => {
+                            (Board.Children[move.from.Item1 * 8 + move.from.Item2] as BoardCell).Activate(true);
+                            (Board.Children[move.to.Item1 * 8 + move.to.Item2] as BoardCell).Activate(true);
+                        });
+                    }
                     if (game_result == 1)
                     {
                         Dispatcher.Invoke(() => {
@@ -156,6 +170,12 @@ namespace CheckersGame
                         changePlayer();
                 }
             }).Start();
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (DifficultyLbl != null)
+                DifficultyLbl.Content = ((int)DifficultySlider.Value).ToString();
         }
     }
 }

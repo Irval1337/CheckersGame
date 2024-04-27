@@ -6,11 +6,97 @@
         xmlns:local="clr-namespace:CheckersGame"
         mc:Ignorable="d"
         Title="CheckersGame" Height="700" Width="1280" Loaded="Window_Loaded" TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="true">
+    <Window.Resources>
+
+        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border  BorderThickness="1" BorderBrush="#818387" Background="#818387" Height="5"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" Background="#2196f3" BorderThickness="1" BorderBrush="#2196f3" Height="5"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderThumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse Height="12" Width="12" Fill="#3f51b5"></Ellipse>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="Slider"  TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Track Grid.Row="1" x:Name="PART_Track"   >
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton1}"  Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}"  />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton}" Command="Slider.IncreaseLarge" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="Horizontal_Slider" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="21" />
+                    <Setter Property="MinWidth" Value="104" />
+                    <Setter Property="Template" Value="{StaticResource Slider}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <local:NotificationBox x:Name="FinalNotification" Panel.ZIndex="2" Visibility="Collapsed"/>
         <Grid x:Name="BlackoutPanel" Visibility="Collapsed" Background="#FF363A3F" Panel.ZIndex="1" Opacity="0.6"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True">
-            <local:PlayerPanel x:Name="PlayerPanel" Margin="0 0 25 0" VerticalAlignment="Top"/>
+            <StackPanel Orientation="Vertical" Margin="0 0 25 0" VerticalAlignment="Top">
+                <local:PlayerPanel x:Name="PlayerPanel"/>
+                <Border CornerRadius="7" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#e5e7eb" Background="White" Margin="0 25 0 0">
+                    <Border.Effect>
+                        <DropShadowEffect RenderingBias="Quality" ShadowDepth="3" Direction="270" BlurRadius="6" Opacity="0.15" Color="#FF7B8387" />
+                    </Border.Effect>
+                    <Grid Background="Transparent" Height="171" Width="205">
+                        <Label Content="Сложность противника" Margin="0 8 0 0" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Calibri"/>
+                        <Slider x:Name="DifficultySlider" Style="{StaticResource Horizontal_Slider}" VerticalAlignment="Top" Width="170" HorizontalAlignment="Center" Value="5" Margin="0,47,0,0" SmallChange="1" Cursor="Hand" Minimum="1" Height="0" ValueChanged="Slider_ValueChanged" Maximum="5"/>
+                        <Label x:Name="DifficultyLbl" Content="5" Margin="0 58 0 0" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Calibri" Foreground="#BF000000"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
             <Border CornerRadius="7" HorizontalAlignment="Center" VerticalAlignment="Top" BorderThickness="1" BorderBrush="#e5e7eb" Margin="0 0" Background="White">
                 <Border.Effect>
                     <DropShadowEffect RenderingBias="Performance" ShadowDepth="3" Direction="270" BlurRadius="6" Opacity="0.15" Color="#FF7B8387" />
