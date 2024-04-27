@@ -130,14 +130,30 @@ namespace CheckersGame
                     var result = new UCTBot((Game)game.Clone(), 6000).suggest();
                     var move = result.Item1;
                     //MessageBox.Show(result.Item2.ToString());
-                    game.move(move);
+                    int game_result = game.move(move);
                     lastMoves.Add(move.from);
                     lastMoves.Add(move.to);
                     Dispatcher.Invoke(() => {
                         (Board.Children[move.from.Item1 * 8 + move.from.Item2] as BoardCell).Activate(true);
                         (Board.Children[move.to.Item1 * 8 + move.to.Item2] as BoardCell).Activate(true);
                     });
-                    changePlayer();
+                    if (game_result == 1)
+                    {
+                        Dispatcher.Invoke(() => {
+                            BlackoutPanel.Visibility = Visibility.Visible;
+                            FinalNotification.Visibility = Visibility.Visible;
+                            FinalNotification.Win();
+                        });
+                    }
+                    else if (game_result == 2)
+                    {
+                        Dispatcher.Invoke(() => {
+                            BlackoutPanel.Visibility = Visibility.Visible;
+                            FinalNotification.Visibility = Visibility.Visible;
+                        });
+                    }
+                    else
+                        changePlayer();
                 }
             }).Start();
         }

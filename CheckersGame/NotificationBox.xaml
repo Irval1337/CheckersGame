@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="CheckersGame.NotificationBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CheckersGame"
+             mc:Ignorable="d" 
+             d:DesignHeight="290" d:DesignWidth="640">
+    <Border CornerRadius="7" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#e5e7eb" Margin="0 0" Background="White">
+        <Border.Effect>
+            <DropShadowEffect RenderingBias="Quality" ShadowDepth="3" Direction="270" BlurRadius="6" Opacity="0.15" Color="#FF7B8387" />
+        </Border.Effect>
+        <Grid Background="Transparent" Height="290" Width="640">
+            <Label x:Name="ResultText" Content="Вы проиграли!" FontSize="22" FontFamily="Calibri" Margin="20 28 0 0" VerticalAlignment="Top" Padding="0" Foreground="Black"/>
+            <Rectangle Margin="0 73 0 0" Height="1" VerticalAlignment="Top" Fill="#e5e7eb"/>
+            <Label FontSize="18" FontFamily="Calibri" Margin="20 100 0 0" Padding="0" Foreground="#FF545A66" VerticalAlignment="Top">
+                <Label.Content>
+                    <TextBlock x:Name="GameText" TextWrapping="Wrap" Width="599">К сожалению, на этот раз РобоТакса одержала верх. Вы можете попробовать изменить уровень сложности на боковой панели, чтобы сделать игру более увлекательной.</TextBlock>
+                </Label.Content>
+            </Label>
+            <Rectangle Margin="0 198 0 0" Height="1" VerticalAlignment="Top" Fill="#e5e7eb"/>
+            <Button x:Name="RestartBtn" Content="Новая игра" BorderThickness="0" Width="110" Height="42" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20 225 0 0" Background="#0e7490" Foreground="White" FontFamily="Calibri" FontWeight="Bold" FontSize="16" Cursor="Hand" PreviewMouseDown="RestartBtn_PreviewMouseDown">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="6"/>
+                    </Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter Property="Background" TargetName="border" Value="#155e75"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="true">
+                                            <Setter Property="Background" TargetName="border" Value="#0e576e"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>
