@@ -104,6 +104,14 @@ namespace CheckersGame
                     });
                 }
             }
+
+            Dispatcher.Invoke(() => {
+                int diff = game.getScore(false) - game.getScore(true);
+                Score1.SetScore(game.getLostCount().Item1, diff, true);
+                Score2.SetScore(game.getLostCount().Item2, -diff, false);
+
+                PlayerPanel.SetMove(game.getPlayer() == 2);
+            });
         }
 
         private void changePlayer()
@@ -121,7 +129,7 @@ namespace CheckersGame
                 {
                     var result = new UCTBot((Game)game.Clone(), 6000).suggest();
                     var move = result.Item1;
-                    MessageBox.Show(result.Item2.ToString());
+                    //MessageBox.Show(result.Item2.ToString());
                     game.move(move);
                     lastMoves.Add(move.from);
                     lastMoves.Add(move.to);

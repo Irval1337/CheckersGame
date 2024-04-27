@@ -341,6 +341,11 @@ namespace CheckersGame
                   (row < _rows - 2 && col < _columns - 2 && (isKing || _current_player == 2) && validHop(row, col, row + 2, col + 2));
         }
 
+        public (int, int) getLostCount()
+        {
+            return ((_rows - 2) / 2 * (_columns / 2) - _figureCount.Item1, (_rows - 2) / 2 * (_columns / 2) - _figureCount.Item2);
+        }
+
         private int _rows, _columns;
         private (int, int) _figureCount, _kingCount;
         private List<List<Cell>> _board;

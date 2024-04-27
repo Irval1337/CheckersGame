@@ -62,12 +62,18 @@
     <Compile Include="Cell.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MoveList.cs" />
+    <Compile Include="PlayerPanel.xaml.cs">
+      <DependentUpon>PlayerPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
     <Compile Include="ResourceAccessor.cs" />
+    <Compile Include="ScoreLine.xaml.cs">
+      <DependentUpon>ScoreLine.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UCTBot.cs" />
     <Page Include="BoardCell.xaml">
       <SubType>Designer</SubType>
@@ -88,6 +94,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PlayerPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ScoreLine.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -130,6 +144,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\red-checkers-piece-king.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="missing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="gigachaddog.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

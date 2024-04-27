@@ -68,6 +68,11 @@ namespace CheckersGame
             }
         }
 
+        public void SetTransparent()
+        {
+            btn.Background = new SolidColorBrush(Colors.Transparent);
+        }
+
         public void SetMove(bool move)
         {
             if (CellType != -1) return;
