@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CheckersGame"
         mc:Ignorable="d"
-        Title="CheckersGame" Height="700" Width="1280" Loaded="Window_Loaded" TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="true">
+        Title="Шашки с РобоТаксой" Height="700" Width="1280" Loaded="Window_Loaded" TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="true" ResizeMode="NoResize" Icon="/logodog.ico">
     <Window.Resources>
 
         <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
@@ -90,7 +90,7 @@
                     <Border.Effect>
                         <DropShadowEffect RenderingBias="Quality" ShadowDepth="3" Direction="270" BlurRadius="6" Opacity="0.15" Color="#FF7B8387" />
                     </Border.Effect>
-                    <Grid Background="Transparent" Height="171" Width="205">
+                    <Grid Background="Transparent" Height="101" Width="205">
                         <Label Content="Сложность противника" Margin="0 8 0 0" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Calibri"/>
                         <Slider x:Name="DifficultySlider" Style="{StaticResource Horizontal_Slider}" VerticalAlignment="Top" Width="170" HorizontalAlignment="Center" Value="5" Margin="0,47,0,0" SmallChange="1" Cursor="Hand" Minimum="1" Height="0" ValueChanged="Slider_ValueChanged" Maximum="5"/>
                         <Label x:Name="DifficultyLbl" Content="5" Margin="0 58 0 0" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Calibri" Foreground="#BF000000"/>
